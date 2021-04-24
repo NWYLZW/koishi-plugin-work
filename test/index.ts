@@ -28,8 +28,14 @@ describe('Work Plugin', async () => {
     )
     const curUserData = async (): Promise<User> => await app.database.memory.getUser('mock', ses.userId)
 
-    const waitAddTodos: (Pick<Todo, 'name' | 'desc'>)[] = [{
-      name: 'test01', desc: 'some dec'
+    const waitAddTodos: (Pick<Todo, 'name' | 'desc' | 'tags'>)[] = [{
+      name: 'test01',
+      desc: 'some dec',
+      tags: []
+    }, {
+      name: 'test02',
+      desc: 'some dec',
+      tags: [ 'demo' ]
     }]
 
     it('add todo', async () => {
@@ -77,6 +83,25 @@ describe('Work Plugin', async () => {
       const todos = (await curUserData()).todos
       await ses.shouldReply(
         'todos.list', staticTodosTemplate(todos) + todos.map(todo => aTodoTemplate(todo, true)).join('\n')
+      )
+    })
+
+    it('add tag todo', async () => {
+      await ses.shouldReply(
+        'todos.add', '参数错误'
+      )
+      const todo = waitAddTodos[1]
+      await ses.shouldReply(
+        `todos.add -t ${todo.tags[0]} ${todo.name} ${todo.desc}`,
+        new RegExp(`^\\[${todo.name}📝todo] 添加成功\\n共1📝，❎待完成1，✅已完成0\\n📝.id: .*$`)
+      )
+    })
+
+    it('list tag todos', async () => {
+      const tagName = 'demo'
+      const todos = (await curUserData()).todos.filter(todo => todo.tags.includes(tagName))
+      await ses.shouldReply(
+        `todos.list ${tagName}`, staticTodosTemplate(todos) + todos.map(todo => aTodoTemplate(todo, true)).join('\n')
       )
     })
   })
