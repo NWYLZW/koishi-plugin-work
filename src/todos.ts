@@ -37,7 +37,7 @@ const getTodo = (
   return todo
 }
 
-const aTodoTemplate = (
+export const aTodoTemplate = (
   todo: Todo, isSimple = false
 ) => {
   const id = isSimple?todo.id.slice(0, 10):todo.id
@@ -83,38 +83,46 @@ export const registerSubCommands = (ctx: Context, cmd: Command): void => {
     .subcommand('.todos', { authority: 1 })
     .alias('todos')
 
+  const checkId: Command.Action = (argv, id) => {
+    if (id === undefined || id === '') return '参数错误'
+  }
+
   todoCommand.subcommand('.add <name> [desc:text]')
     .usage('添加todo到代办列表')
     .option('tag', '-t [tag] 标签')
     .option('isGroup', '-g 指定到当前群组', { type: 'boolean' })
     .option('user', '-u [user:user] 指定用户', { authority: 3 })
+    .check((
+      _,
+      name
+    ) => {
+      if (name === undefined || name === '') return '参数错误'
+    })
+    .userFields([ 'todos', 'onebot' ])
     .action(async ({
       session, options
     }, name, desc) => {
-      if (name === undefined || name === '') return '参数错误'
-      if (session) {
-        const sessionU = await getUser(ctx, session)
-        let u
-        if (options?.user) {
-          u = await userTool.getUserFromStr(ctx, options.user)
-        } else {
-          u = sessionU
-        }
-
-        const todo: Todo = {
-          id: uuidv4(), name, desc,
-          tags: options?.tag ? [ options?.tag ] : [],
-          status: 'processing',
-          designator: { qq: sessionU.onebot },
-          ctime: new Date()
-        }
-        if (!u.todos) u.todos = []
-        u.todos.push(todo)
-        await ctx.database.setUser(
-          'onebot', u.onebot, u
-        )
-        return `[${name}📝todo] 添加成功\n` + staticTodosTemplate(u.todos) + `📝.id: ${todo.id}`
+      const user = session.user
+      let u
+      if (options?.user) {
+        u = await userTool.getUserFromStr(ctx, options.user)
+      } else {
+        u = user
       }
+
+      const todo: Todo = {
+        id: uuidv4(), name, desc,
+        tags: options?.tag ? [ options?.tag ] : [],
+        status: 'processing',
+        designator: { qq: user.onebot },
+        ctime: new Date()
+      }
+      if (!u.todos) u.todos = []
+      u.todos.push(todo)
+      await ctx.database.setUser(
+        'onebot', u.onebot, u
+      )
+      return `[${name}📝todo] 添加成功\n` + staticTodosTemplate(u.todos) + `📝.id: ${todo.id}`
     })
 
   todoCommand.subcommand('.list [tag]')
@@ -154,6 +162,7 @@ export const registerSubCommands = (ctx: Context, cmd: Command): void => {
 
   todoCommand.subcommand('.update <id> [status]')
     .usage('更新已有的todo信息，第一个参数为todo的id，可简写但必须唯一。')
+    .check(checkId)
     .option('tag', '-t [tag] 标签')
     .option('desc', '-d [desc:text] 介绍')
     .action(async ({
@@ -161,8 +170,7 @@ export const registerSubCommands = (ctx: Context, cmd: Command): void => {
       options
     }, id, status) => {
       if (
-        id === undefined || id === '' ||
-        (status && ['processing', 'finished'].indexOf(status) === -1)
+        status && ['processing', 'finished'].indexOf(status) === -1
       ) return '参数错误'
       if (session) {
         try {
@@ -188,14 +196,11 @@ export const registerSubCommands = (ctx: Context, cmd: Command): void => {
     })
 
   todoCommand.subcommand('.get <id>')
+    .check(checkId)
     .usage('获取指定的todo信息，第一个参数为todo的id，可简写但必须唯一。')
-    .check((argv, id) => {
-      if (id === undefined || id === '') return '参数错误'
-    })
     .action(async ({
       session
     }, id) => {
-
       if (session) {
         try {
           const u = await getUser(ctx, session)
@@ -209,27 +214,26 @@ export const registerSubCommands = (ctx: Context, cmd: Command): void => {
 
   todoCommand.subcommand('.del <id>')
     .usage('删除指定的todo信息，第一个参数为todo的id，可简写但必须唯一。')
+    .check(checkId)
+    .userFields([ 'todos', 'onebot' ])
     .action(async ({
       session
     }, id) => {
-      if (id === undefined || id === '') return '参数错误'
-      if (session) {
-        try {
-          const u = await getUser(ctx, session)
-          const index = u.todos.findIndex(
-            todo => new RegExp(`^${id}`).test(todo.id)
-          )
-          if (index === -1) return '未检索到指定todo，请检查是否存在'
+      try {
+        const u = session.user
+        const index = u.todos.findIndex(
+          todo => new RegExp(`^${id}`).test(todo.id)
+        )
+        if (index === -1) return '未检索到指定todo，请检查是否存在'
 
-          u.todos.splice(index, 1)
-          await ctx.database.setUser(
-            'onebot', session?.author?.userId ?? '', u
-          )
-          return '删除todo成功\n' + staticTodosTemplate(u.todos)
-        } catch (e) {
-          return e.message
-        }
-      }
+        u.todos.splice(index, 1)
+        await ctx.database.setUser(
+          'onebot', session?.author?.userId ?? '', u
+        )
+        return '删除todo成功\n' + staticTodosTemplate(u.todos)
+      } catch (e) {
+        return e.message
+    }
     })
 
   todoCommand.subcommand('.clear <tag>')

@@ -17,7 +17,8 @@
     "jsx": "react",
     "types": [ "node", "mocha" ],
     "paths": {
-      "koishi-plugin-work": [ "./src" ]
+      "koishi-plugin-work": [ "./src" ],
+      "koishi-plugin-work/*": [ "./src/*" ]
     },
     "lib": [
       "esnext"
