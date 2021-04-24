@@ -125,35 +125,31 @@ export const registerSubCommands = (ctx: Context, cmd: Command): void => {
     .option('isGroup', '-g 指定到当前群组', { type: 'boolean' })
     .option('long', '-l 长信息', { type: 'boolean' })
     .option('user', '-u [user:user] 指定用户', { authority: 3 })
-    .action(async ({
-      session,
-      options
-    }, tag) => {
-      if (session) {
-        const sessionU = await getUser(ctx, session)
-        let u
-        if (options?.user) {
-          u = await userTool.getUserFromStr(ctx, options.user)
-        } else {
-          u = sessionU
-        }
-
-        if (options.picture) {
-          const url = `http://localhost:13333/work/${
-            u.onebot
-          }/todos/${tag ?? 'all'}?${querystring.stringify(options)}`
-
-          await pptTool
-            .open(url).$('body').shot()
-            .start()
-          const img = pptTool.images[0]
-          pptTool.images = []
-          return img
-        }
-
-        const todos = listTodos(u.todos, tag, options)
-        return staticTodosTemplate(todos) + todos.map(todo => aTodoTemplate(todo, !options?.long)).join('\n')
+    .userFields([ 'todos', 'onebot' ])
+    .action(async ({ session, options }, tag) => {
+      const { user } = session
+      let u
+      if (options?.user) {
+        u = await userTool.getUserFromStr(ctx, options.user)
+      } else {
+        u = user
       }
+
+      if (options.picture) {
+        const url = `http://localhost:13333/work/${
+          u.onebot
+        }/todos/${tag ?? 'all'}?${querystring.stringify(options)}`
+
+        await pptTool
+          .open(url).$('body').shot()
+          .start()
+        const img = pptTool.images[0]
+        pptTool.images = []
+        return img
+      }
+
+      const todos = listTodos(u.todos, tag, options)
+      return staticTodosTemplate(todos) + todos.map(todo => aTodoTemplate(todo, !options?.long)).join('\n')
     })
 
   todoCommand.subcommand('.update <id> [status]')

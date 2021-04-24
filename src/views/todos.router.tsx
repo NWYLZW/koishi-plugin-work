@@ -9,6 +9,8 @@ import { StaticTodos } from './components/static-todos'
 export const registerTodosRoutes = (ctx: Context) => {
   const koaRouter = ctx.app.router
 
+  if (!koaRouter) return
+
   koaRouter.use(async (koaCtx, next) => {
     if (/^\/work\/.*/.test(koaCtx.path)) {
       let content = await next()
@@ -28,7 +30,7 @@ export const registerTodosRoutes = (ctx: Context) => {
     }
   })
 
-  koaRouter.get('/work/:qqNum/todos/:tag', async (koaCtx, next) => {
+  koaRouter.get('/work/:qqNum/todos/:tag', async (koaCtx, _next) => {
     const u = await userTool.getUserFromStr(
       ctx, `onebot:${parseInt(koaCtx.params.qqNum)}`
     )

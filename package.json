@@ -22,7 +22,7 @@
     "build:min": "rollup -c --environment FORMAT:min",
     "build:dec": "tsc -p . --declaration --emitDeclarationOnly",
     "lint": "eslint src/**/*.{js,ts}",
-    "test": "mocha -r ts-node/register test/**/*.ts"
+    "test": "mocha test/**/*.ts"
   },
   "husky": {
     "hooks": {
@@ -41,6 +41,7 @@
     "koishi": "^3.9.2",
     "koishi-adapter-onebot": "^3.0.8",
     "koishi-core": "^3.9.2",
+    "koishi-plugin-mongo": "^2.2.2",
     "koishi-plugin-puppeteer": "^2.1.0"
   },
   "devDependencies": {
@@ -65,9 +66,11 @@
     "highlight.js": "^10.7.2",
     "html-entities": "^2.3.2",
     "husky": "^6.0.0",
-    "koishi-test-utils": "^5.0.3",
+    "koishi-test-utils": "^6.0.0-beta.11",
     "lodash.merge": "^4.6.2",
+    "marked": "^2.0.3",
     "mocha": "^8.3.2",
+    "node-sass": "^5.0.0",
     "npm-run-all": "^4.1.5",
     "pngjs": "^6.0.0",
     "querystring": "^0.2.1",

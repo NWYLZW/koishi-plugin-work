@@ -8,12 +8,27 @@ import { Context } from 'koishi-core'
 import 'koishi-adapter-onebot'
 import 'koishi-plugin-puppeteer'
 
-import { registerSubCommands } from './todos'
+import { Config } from './main'
 import { pptTool } from './tool/ppt-tool'
+import { registerSubCommands } from './todos'
+
+export * from './main'
+
+declare module 'koishi-core' {
+  namespace Plugin {
+    interface Packages {
+      'koishi-plugin-work': typeof import('.')
+    }
+  }
+}
 
 export const name = 'work'
 
-export function apply(ctx: Context, _options?: Record<string, unknown>): void {
+const defaultConfig: Config = {
+}
+
+export const apply = (ctx: Context, config: Config = {}) => {
+  const _config = Object.assign(defaultConfig, config)
   const _logger = ctx.logger('koishi-plugin-work')
 
   ctx.with([ 'koishi-plugin-puppeteer' ], () => {
