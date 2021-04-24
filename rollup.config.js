@@ -18,7 +18,7 @@ import babel from 'rollup-plugin-babel'
 
 import pkg from './package.json'
 
-const extensions = ['.js', '.ts']
+const extensions = [ '.ts', '.tsx' ]
 
 const resolve = (...args) => {
   return path.resolve(__dirname, ...args)

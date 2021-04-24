@@ -16,7 +16,7 @@
     "prepare": "husky install",
     "api": "yarn build:dec && api-extractor run && rimraf -g \"dist/{tool,views}/\"",
     "dev": "rollup -w -c --environment FORMAT:esm",
-    "build": "rimraf dist/* && run-p build:esm build:umd build:min && yarn api",
+    "build": "rimraf dist/* && run-p build:esm build:umd build:min && yarn build:dec",
     "build:esm": "rollup -c --environment FORMAT:esm",
     "build:umd": "rollup -c --environment FORMAT:umd",
     "build:min": "rollup -c --environment FORMAT:min",
@@ -46,6 +46,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
+    "@babel/plugin-transform-regenerator": "^7.13.15",
+    "@babel/plugin-transform-runtime": "^7.13.15",
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-typescript": "^7.13.0",
     "@microsoft/api-extractor": "^7.13.2",
