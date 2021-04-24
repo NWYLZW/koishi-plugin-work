@@ -1,0 +1,12 @@
+.el-tag {
+  padding: 0 10px;
+  border: 1px solid #d9ecff;
+  border-radius: 4px;
+  color: #409eff;
+  background-color: #ecf5ff;
+  &.el-tag--success {
+    background-color: #f0f9eb;
+    border-color: #e1f3d8;
+    color: #67c23a;
+  }
+}

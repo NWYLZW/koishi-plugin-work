@@ -1,0 +1,13 @@
+.bar {
+  margin-top: 15px;
+  height: 20px;
+  background-color: #efefef;
+  border: 1px solid #dedede;
+  border-radius: 10px;
+  overflow: hidden;
+
+  .cur-process {
+    height: 100%;
+    background-color: #409eff;
+  }
+}

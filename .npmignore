@@ -1,0 +1,14 @@
+.*
+.mocharc.js
+rollup.config.js
+api-extractor.json
+tsconfig.json
+AUTHORS
+*.lock
+
+.github
+.idea
+src
+test
+temp
+coverage
