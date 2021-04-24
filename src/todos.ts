@@ -61,12 +61,14 @@ export const listTodos = (
     mouth?: boolean
   }
 ): Todo[] => {
-  todos = todos
-    .filter(
-      todo => tag === undefined || tag === 'all' || (
-        todo.tags.length > 0 && todo.tags.indexOf(tag) !== -1
+  if (todos && tag) {
+    todos = todos
+      .filter(
+        todo => tag === undefined || tag === 'all' || (
+          todo.tags.length > 0 && todo.tags.indexOf(tag) !== -1
+        )
       )
-    )
+  }
   if (options?.week && !options.mouth) {
     todos = todos.filter(todo => !dayjs(todo.ctime).isBefore(dayjs().add(-7, 'day')))
   }

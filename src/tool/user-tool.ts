@@ -8,11 +8,13 @@ import { Context } from 'koishi-core'
 import { User } from 'koishi'
 
 export const userTool = {
-  async getUserFromStr (ctx: Context, uStr: string): Promise<User> {
+  async getUserFromStr (ctx: Context, uStr: string): Promise<
+    Pick<User, 'todos' | 'onebot' | 'name' | 'id'>
+  > {
     const splits = uStr.split(':')
     const [ type, id ] = splits as [ User.Index, string ]
     let u = await ctx.database.getUser(
-      type, id
+      type, id, [ 'todos' ]
     )
     if (u === undefined) {
       await ctx.database.createUser(
