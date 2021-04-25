@@ -52,6 +52,11 @@
     "koishi-plugin-puppeteer": "^2.1.0"
   },
   "devDependencies": {
+    "koishi": "^3.9.2",
+    "koishi-adapter-onebot": "^3.0.8",
+    "koishi-core": "^3.9.2",
+    "koishi-plugin-mongo": "^2.2.2",
+    "koishi-plugin-puppeteer": "^2.1.0",
     "@babel/core": "^7.13.14",
     "@babel/plugin-transform-regenerator": "^7.13.15",
     "@babel/plugin-transform-runtime": "^7.13.15",
