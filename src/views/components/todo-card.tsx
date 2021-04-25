@@ -58,7 +58,7 @@ export const TodoCard = ({ todo }: { todo: Todo }) => {
         <span className="el-tag el-tag--success">{todo.id}</span>
       </h2>
       <h2 className="title">
-        {todo.name}
+        {decode(todo.name)}
       </h2>
       {todo.tags.length > 0 &&
       <h3>
