@@ -32,14 +32,20 @@ export const registerTodosRoutes = (ctx: Context) => {
 
   koaRouter.get('/work/:qqNum/todos/:tag', async (koaCtx, _next) => {
     const u = await userTool.getUserFromStr(
-      ctx, `onebot:${parseInt(koaCtx.params.qqNum)}`
+      ctx, `onebot:${parseInt(koaCtx.params.qqNum)}`, [ 'todos' ]
     )
     const todos = listTodos(u.todos, koaCtx.params.tag, koaCtx.query)
 
     renderTool.defaultStyles = {
-      'label': [ __dirname, '../static/label.scss' ],
-      'element': [ __dirname, '../static/element.scss' ],
-      'github-md': [ __dirname, '../static/github-markdown.scss' ]
+      'label': [
+        './static/label.scss'
+      ],
+      'element': [
+        './static/element.scss'
+      ],
+      'github-md': [
+        './static/github-markdown.scss'
+      ]
     }
 
     return (

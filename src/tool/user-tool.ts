@@ -8,19 +8,23 @@ import { Context } from 'koishi-core'
 import { User } from 'koishi'
 
 export const userTool = {
-  async getUserFromStr (ctx: Context, uStr: string): Promise<
-    Pick<User, 'todos' | 'onebot' | 'name' | 'id'>
+  async getUserFromStr<T extends User.Field>(
+    ctx: Context, uStr: string, fields?: readonly T[]
+  ): Promise<
+    Pick<User, User.Index | T>
   > {
     const splits = uStr.split(':')
     const [ type, id ] = splits as [ User.Index, string ]
-    let u = await ctx.database.getUser(
-      type, id, [ 'todos' ]
+    const u = await ctx.database.getUser(
+      type, id, fields
     )
     if (u === undefined) {
       await ctx.database.createUser(
         type, id, { todos: [] }
       )
-      u = await ctx.database.getUser(type, id)
+      return await ctx.database.getUser(
+        type, id, fields
+      ) as Pick<User, User.Index | T>
     }
     return u
   }

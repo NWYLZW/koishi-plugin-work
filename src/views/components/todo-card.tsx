@@ -23,8 +23,8 @@ export interface Todo {
 
 marked.setOptions({
   highlight(
-    code: string, lang: string, callback?: (error: any, code?: string
-    ) => void): string | void {
+    code: string, lang: string, _callback?: (error: any, code?: string) => void
+  ): string | void {
     if (lang !== '') {
       return hljs.highlight(code, { language: lang }).value
     }
@@ -40,12 +40,14 @@ marked.setOptions({
 })
 
 export const TodoCard = ({ todo }: { todo: Todo }) => {
-  renderTool.pushStyle(
-    'github-highlight', process.cwd(), './node_modules/highlight.js/scss/nord.scss'
-  )
-  renderTool.pushStyle(
-    'todo-card', __dirname, './todo-card.module.scss'
-  )
+  renderTool.pushStyles({
+    'github-highlight': [
+      './node_modules/highlight.js/scss/nord.scss'
+    ],
+    'todo-card': [
+      './static/components/todo-card.module.scss'
+    ]
+  })
 
   return (
     <div className="todo-card">

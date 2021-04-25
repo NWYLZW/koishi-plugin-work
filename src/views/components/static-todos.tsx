@@ -5,9 +5,11 @@ import { renderTool } from '../../tool/render-tool'
 export const StaticTodos = ({ todos }: {
   todos: Todo[]
 }) => {
-  renderTool.pushStyle(
-    'static-todos', __dirname, './static-todos.module.scss'
-  )
+  renderTool.pushStyles({
+    'static-todos': [
+      './static/components/static-todos.module.scss'
+    ]
+  })
 
   const sumTodos = todos.length
   const getStatusTodos = (status: TodoStatus) =>

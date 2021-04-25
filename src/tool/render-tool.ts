@@ -7,13 +7,22 @@
 import path from 'path'
 import sass from 'node-sass'
 
-class RenderTool {
-  private styles: Record<string, string[]> = {}
+type Styles =  Record<string, string[]>
 
-  defaultStyles: Record<string, string[]> = {}
+class RenderTool {
+  private styles: Styles = {}
+
+  defaultStyles: Styles = {}
 
   pushStyle(id: string, ...pathSegments: string[]): RenderTool {
     this.styles[id] = pathSegments
+    return this
+  }
+
+  pushStyles(styles: Styles): RenderTool {
+    this.styles = {
+      ...this.styles, ...styles,
+    }
     return this
   }
 
@@ -26,7 +35,7 @@ class RenderTool {
     for (const id in styles) {
       stylesStr += `<style>${
         sass.renderSync({
-          file: path.resolve(...styles[id])
+          file: path.resolve(__dirname, '../', ...styles[id])
         }).css.toString()
       }</style>`
     }
