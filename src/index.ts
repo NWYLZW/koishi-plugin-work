@@ -10,7 +10,7 @@ import 'koishi-plugin-puppeteer'
 
 import { Config } from './main'
 import { pptTool } from './tool/ppt-tool'
-import { registerSubCommands } from './todos'
+import { registerSubCommands } from './subcommands/todos'
 
 export * from './main'
 
@@ -29,12 +29,12 @@ const defaultConfig: Config = {
 
 export const apply = (ctx: Context, config: Config = {}) => {
   const _config = Object.assign(defaultConfig, config)
-  const _logger = ctx.logger('koishi-plugin-work')
-
-  ctx.with([ 'koishi-plugin-puppeteer' ], () => {
-    pptTool.initCTX(ctx)
-  })
+  const logger = ctx.logger('koishi-plugin-work')
+  pptTool.initCTX(ctx)
 
   const workCommand = ctx.command('work', { authority: 1 })
   registerSubCommands(ctx, workCommand)
+  logger.info(
+    `koishi-plugin-${name} installed...`
+  )
 }

@@ -7,7 +7,7 @@
 import { App } from 'koishi-test-utils'
 
 import * as work from 'koishi-plugin-work'
-import { aTodoTemplate, staticTodosTemplate } from 'koishi-plugin-work/todos'
+import { aTodoTemplate, staticTodosTemplate } from '../src/subcommands/todos'
 import { Todo } from 'koishi-plugin-work/views/components/todo-card'
 import { User } from 'koishi'
 

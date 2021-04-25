@@ -10,11 +10,11 @@ import { v4 as uuidv4 } from 'uuid'
 import dayjs from 'dayjs'
 import * as querystring from 'querystring'
 
-import { Todo, TodoStatus } from './views/components/todo-card'
-import { msgTool } from './tool/msg-tool'
-import { userTool } from './tool/user-tool'
-import { registerTodosRoutes } from './views/todos.router'
-import { pptTool } from './tool/ppt-tool'
+import { Todo, TodoStatus } from '../views/components/todo-card'
+import { msgTool } from '../tool/msg-tool'
+import { userTool } from '../tool/user-tool'
+import { registerTodosRoutes } from '../views/todos.router'
+import { pptTool } from '../tool/ppt-tool'
 
 declare module 'koishi-core' {
   interface User {
@@ -79,6 +79,7 @@ export const listTodos = (
 }
 
 export const registerSubCommands = (ctx: Context, cmd: Command): void => {
+  const baseUrl = `http://localhost:${ctx.app.options.port}`
   registerTodosRoutes(ctx)
 
   const todoCommand = cmd
@@ -146,7 +147,7 @@ export const registerSubCommands = (ctx: Context, cmd: Command): void => {
       }
 
       if (options.picture) {
-        const url = `http://localhost:13333/work/${
+        const url = `${baseUrl}/work/${
           u.onebot
         }/todos/${tag ?? 'all'}?${querystring.stringify(options)}`
 

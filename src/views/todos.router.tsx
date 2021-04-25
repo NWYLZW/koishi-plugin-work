@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server'
 import * as React from 'react'
 import { userTool } from '../tool/user-tool'
 import { renderTool } from '../tool/render-tool'
-import { listTodos } from '../todos'
+import { listTodos } from '../subcommands/todos'
 import { StaticTodos } from './components/static-todos'
 
 export const registerTodosRoutes = (ctx: Context) => {
