@@ -56,12 +56,12 @@ export const staticTodosTemplate = (todos: Todo[]): string => {
 }
 
 export const listTodos = (
-  todos: Todo[], tag?: string, options?: {
+  todos: Todo[] = [], tag?: string, options?: {
     week?: boolean
     mouth?: boolean
   }
 ): Todo[] => {
-  if (todos && tag) {
+  if (todos.length > 0 && tag) {
     todos = todos
       .filter(
         todo => tag === undefined || tag === 'all' || (
