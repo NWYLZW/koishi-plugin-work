@@ -9,20 +9,16 @@ import { Page, Viewport, Shooter, BinaryScreenshotOptions } from 'puppeteer-core
 import { PNG } from 'pngjs'
 import { segment } from 'koishi'
 
-const requirePPT = (target: PuppeteerTool, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
-  const originalMethod = descriptor.value
-  descriptor.value = async function (this: PuppeteerTool,...args: unknown[]) {
-    if (this.ppt) {
-      return await originalMethod.apply(this, args)
-    }
-    console.warn('Require koishi-plugin-puppeteer, but not install.')
-  }
-}
-
 class PuppeteerTool {
   ctx?: Context
   get ppt(): Context['puppeteer'] {
-    return this.ctx.puppeteer
+    try {
+      return this.ctx.puppeteer
+    } catch (e) {
+      throw new Error(
+        'Require koishi-plugin-puppeteer, but not install.You need to install koishi-plugin-puppeteer'
+      )
+    }
   }
   get cfg () {
     return this.ppt.config
@@ -46,7 +42,6 @@ class PuppeteerTool {
     url: ''
   }
 
-  @requirePPT
   async asyncOpen(url: string) {
     await this.ppt.launch()
     this.curPage = await this.ppt.browser.newPage()
@@ -59,7 +54,6 @@ class PuppeteerTool {
     return this
   }
 
-  @requirePPT
   async asyncSelect(selector: string) {
     this.curShooter = await this.curPage.$(selector)
     return this
@@ -72,7 +66,6 @@ class PuppeteerTool {
   }
   $ = this.select
 
-  @requirePPT
   async asyncViewport(viewport: Viewport) {
     await this.curPage.setViewport({
       ...this.cfg.browser.defaultViewport,
@@ -87,7 +80,6 @@ class PuppeteerTool {
     return this
   }
 
-  @requirePPT
   async asyncShot(
     option: BinaryScreenshotOptions = {}
   ) {
@@ -118,7 +110,6 @@ class PuppeteerTool {
     return this
   }
 
-  @requirePPT
   async asyncClose() {
     await this.ppt.close()
     return this
