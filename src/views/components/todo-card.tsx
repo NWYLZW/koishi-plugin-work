@@ -42,7 +42,7 @@ marked.setOptions({
 export const TodoCard = ({ todo }: { todo: Todo }) => {
   renderTool.pushStyles({
     'github-highlight': [
-      './node_modules/highlight.js/scss/nord.scss'
+      './static/nord.scss'
     ],
     'todo-card': [
       './static/components/todo-card.module.scss'
