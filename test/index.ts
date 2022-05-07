@@ -3,6 +3,7 @@
  * @author yijie
  * @date   2021-04-24 17:32
  * @notes  2021-04-24 17:32 yijie 创建了 index.ts 文件
+ * @notes  2022-05-08 02:52 JST test no longer works because: koishi-test-utils does not provided koishi v4 test utils.
  */
 import { App } from 'koishi-test-utils'
 

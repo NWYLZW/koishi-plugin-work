@@ -4,27 +4,26 @@
  * @date   2021-04-20 15:44
  * @notes  2021-04-20 15:44 yijie 创建了 user-tool.ts 文件
  */
-import { Context } from 'koishi-core'
-import { User } from 'koishi'
-
+import { Context, User } from 'koishi'
+export type Platform = string
 export const userTool = {
-  async getUserFromStr<T extends User.Field>(
+  async getUserFromStr<T extends User.Field> (
     ctx: Context, uStr: string, fields?: readonly T[]
-  ): Promise<
-    Pick<User, User.Index | T>
-  > {
+  ) {
     const splits = uStr.split(':')
-    const [ type, id ] = splits as [ User.Index, string ]
+    const [type, id] = splits as [ Platform, User['id'] ]
     const u = await ctx.database.getUser(
-      type, id, fields
+      //        compliant 'readonly'
+      type, id, fields && [...fields]
     )
     if (u === undefined) {
-      await ctx.database.createUser(
+      await ctx.database.setUser(
         type, id, { todos: [] }
       )
       return await ctx.database.getUser(
-        type, id, fields
-      ) as Pick<User, User.Index | T>
+        //        compliant 'readonly'
+        type, id, fields && [...fields]
+      )
     }
     return u
   }

@@ -5,7 +5,7 @@
  * @notes  2021-04-20 15:58 yijie 创建了 render-tool.ts 文件
  */
 import path from 'path'
-import sass from 'node-sass'
+import sass from 'sass'
 
 type Styles =  Record<string, string[]>
 
@@ -34,9 +34,7 @@ class RenderTool {
     }
     for (const id in styles) {
       stylesStr += `<style>${
-        sass.renderSync({
-          file: path.resolve(__dirname, '../', ...styles[id])
-        }).css.toString()
+        sass.compile(path.resolve(__dirname, '../', ...styles[id])).css
       }</style>`
     }
     return stylesStr
