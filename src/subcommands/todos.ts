@@ -129,7 +129,7 @@ export const registerSubCommands = (ctx: Context, cmd: Command): void => {
         designator: { qq: user.onebot },
         ctime: new Date()
       }
-      if (!u.todos) u.todos = []  
+      if (!u.todos) u.todos = []
       u.todos.push(todo)
       // await ctx.database.setUser(
       //   'onebot', u.onebot, u
