@@ -22,7 +22,7 @@ export interface Todo {
 }
 
 marked.setOptions({
-  highlight(
+  highlight (
     code: string, lang: string, _callback?: (error: any, code?: string) => void
   ): string | void {
     if (lang !== '') {
@@ -53,7 +53,7 @@ export const TodoCard = ({ todo }: { todo: Todo }) => {
     <div className="todo-card">
       <h2 className="title">
         <span className="status">{
-          todo.status === 'processing'?'❎':'✅'
+          todo.status === 'processing' ? '❎' : '✅'
         }</span>
         <span className="el-tag el-tag--success">{todo.id}</span>
       </h2>
@@ -75,8 +75,9 @@ export const TodoCard = ({ todo }: { todo: Todo }) => {
       <div className="designator">
         <h3>指派人</h3>
         <span className="content">
-          {todo.designator?.qq ?
-            <img className="avatar" src={`http://q.qlogo.cn/headimg_dl?dst_uin=${todo.designator?.qq}&spec=640`} alt=""/> : ''
+          {todo.designator?.qq
+            ? <img className="avatar" src={`http://q.qlogo.cn/headimg_dl?dst_uin=${todo.designator?.qq}&spec=640`} alt=""/>
+            : ''
           }
           <span className="el-tag">{todo.designator?.qq ?? '无指派人'}</span>
         </span>

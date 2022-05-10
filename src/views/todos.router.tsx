@@ -1,4 +1,4 @@
-import { Context } from 'koishi-core'
+import { Context } from 'koishi'
 import { renderToString } from 'react-dom/server'
 import * as React from 'react'
 import { userTool } from '../tool/user-tool'
@@ -32,15 +32,15 @@ export const registerTodosRoutes = (ctx: Context) => {
 
   koaRouter.get('/work/:qqNum/todos/:tag', async (koaCtx, _next) => {
     const u = await userTool.getUserFromStr(
-      ctx, `onebot:${parseInt(koaCtx.params.qqNum)}`, [ 'todos' ]
+      ctx, `onebot:${parseInt(koaCtx.params.qqNum)}`, ['todos']
     )
     const todos = listTodos(u.todos, koaCtx.params.tag, koaCtx.query)
 
     renderTool.defaultStyles = {
-      'label': [
+      label: [
         './static/label.scss'
       ],
-      'element': [
+      element: [
         './static/element.scss'
       ],
       'github-md': [

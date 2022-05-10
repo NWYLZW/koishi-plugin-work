@@ -4,21 +4,17 @@
  * @date   2021-04-22 19:42
  * @notes  2021-04-22 19:42 yijie 创建了 puppeteer-tool.ts 文件
  */
-import { Context } from 'koishi-core'
+import { Context } from 'koishi'
+import '@koishijs/plugin-puppeteer'
 import { Page, Viewport, Shooter, BinaryScreenshotOptions } from 'puppeteer-core'
-import { PNG } from 'pngjs'
+// import { PNG } from 'pngjs'
 import { segment } from 'koishi'
 
 class PuppeteerTool {
   ctx?: Context
   get ppt(): Context['puppeteer'] {
-    try {
-      return this.ctx.puppeteer
-    } catch (e) {
-      throw new Error(
-        'Require koishi-plugin-puppeteer, but not install.You need to install koishi-plugin-puppeteer'
-      )
-    }
+    if (this.ctx.puppeteer) return this.ctx.puppeteer
+    throw new Error('Require koishi-plugin-puppeteer, but not install.You need to install koishi-plugin-puppeteer')
   }
   get cfg () {
     return this.ppt.config
@@ -43,7 +39,8 @@ class PuppeteerTool {
   }
 
   async asyncOpen(url: string) {
-    await this.ppt.launch()
+    // ppt.launch no longer exists in v4: https://github.com/koishijs/koishi/blob/master/plugins/puppeteer/src/index.ts
+    // await this.ppt.launch()
     this.curPage = await this.ppt.browser.newPage()
     this.curShooter = this.curPage
     await this.curPage.goto(url)
@@ -69,7 +66,8 @@ class PuppeteerTool {
   async asyncViewport(viewport: Viewport) {
     await this.curPage.setViewport({
       ...this.cfg.browser.defaultViewport,
-      ...this.cfg.renderViewport,
+      // cfg.renderViewport no longer exists in v4: https://github.com/koishijs/koishi/blob/master/plugins/puppeteer/src/index.ts
+      /* ...this.cfg.renderViewport, */
       ...viewport
     })
     return this
@@ -83,10 +81,13 @@ class PuppeteerTool {
   async asyncShot(
     option: BinaryScreenshotOptions = {}
   ) {
+    // eslint-disable-next-line prefer-const
     let buffer: Buffer = await this.curShooter.screenshot({
       encoding: 'binary',
       ...option
     })
+    // cfg.maxLength not exists in v4: https://github.com/koishijs/koishi/blob/master/plugins/puppeteer/src/index.ts
+    /*
     if (buffer.byteLength > this.cfg.maxLength) {
       await new Promise<PNG>((resolve, reject) => {
         const png = new PNG()
@@ -101,6 +102,7 @@ class PuppeteerTool {
         buffer = PNG.sync.write(png)
       }).catch(console.error)
     }
+    */
     this.images.push(segment.image(buffer))
     return this
   }
@@ -111,8 +113,9 @@ class PuppeteerTool {
   }
 
   async asyncClose() {
-    await this.ppt.close()
-    return this
+    // ppt.close no longer exists in v4: https://github.com/koishijs/koishi/blob/master/plugins/puppeteer/src/index.ts
+    // await this.ppt.close()
+    return Promise.resolve()
   }
 
   async start() {
